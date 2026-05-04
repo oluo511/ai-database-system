@@ -1,0 +1,29 @@
+name: 'nafood'
+version: '1.0.0'
+config-version: 2
+
+# Tell dbt where to find the profile (connection config)
+profile: 'nafood'
+
+# Directory layout
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  nafood:
+    staging:
+      # SQLite doesn't allow views in one schema to reference objects in another.
+      # Using tables here avoids circular reference errors when the mart reads
+      # from staging models that themselves reference raw source tables.
+      +materialized: table
+    marts:
+      # Mart models are tables — pre-computed for fast agent queries
+      +materialized: table

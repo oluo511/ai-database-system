@@ -1,0 +1,20 @@
+nafood:
+  target: dev
+  outputs:
+    dev:
+      type: sqlite
+      threads: 1
+
+      # 'database' is an arbitrary label used internally by dbt — not a file path
+      database: "database"
+
+      # 'main' is SQLite's default schema name for the primary connected file
+      schema: "main"
+
+      # Map schema names to actual .db file paths
+      # 'main' must always be present and point to your primary database file
+      schemas_and_paths:
+        main: "../data/db/nafood.db"
+
+      # Directory where dbt will create new .db files if new schemas are needed
+      schema_directory: "../data/db"

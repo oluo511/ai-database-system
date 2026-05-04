@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: mart_product_pricing
+    description: >
+      Normalized product pricing mart. Converts all unit sizes (g, kg, lb, ml, L, pcs)
+      to a common base so cross-supplier price comparison is possible.
+
+    columns:
+      - name: ProductID
+        description: Foreign key to Products table
+        tests:
+          - not_null
+
+      - name: ProductName
+        description: Name of the product
+        tests:
+          - not_null
+
+      - name: SupplierName
+        description: Name of the supplier
+        tests:
+          - not_null
+
+      - name: OriginalUnit
+        description: Raw unit string from ProductUnits (e.g. "1lb Pack", "500g Pack")
+        tests:
+          - not_null
+
+      - name: unit_type
+        description: Parsed unit family — weight, volume, count, or unknown
+        tests:
+          - not_null
+          - accepted_values:
+              # 'unknown' should never appear — means the parser missed a unit string
+              values: ['weight', 'volume', 'count']
+
+      - name: quantity_in_base_unit
+        description: Size converted to base unit (grams, milliliters, or pieces)
+        tests:
+          - not_null
+
+      - name: margin_pct
+        description: (ListPrice - Cost) / ListPrice
+        tests:
+          - not_null

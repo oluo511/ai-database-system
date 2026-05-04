@@ -11,9 +11,19 @@ DB_PATH = os.path.join(BASE_DIR, '..', 'data', 'db', 'nafood.db')
 # This is our master list of 'AI-Safe' data. Even if a table has private 
 # emails or phones, the AI will never see them because they aren't on this list
 SAFE_COLUMNS = [
-    'ManufacturerID', 'ManufacturerName', 'City', 'State', 
+    # Core product fields
+    'ManufacturerID', 'ManufacturerName', 'City', 'State',
     'ProductID', 'ProductName', 'CategoryName', 'AvailableQuantity', 'Unit',
-    'SupplierName', 'ClientName', 'OrderDate', 'OrderTotal', 'TotalSpent', 'Revenue'
+    'SupplierName', 'SupplierCity', 'SupplierState', 'SupplierType',
+    # Order and revenue fields
+    'ClientName', 'OrderDate', 'OrderTotal', 'TotalSpent', 'Revenue',
+    # dbt mart: mart_product_pricing (normalized pricing columns)
+    'OriginalUnit', 'unit_type', 'raw_quantity', 'quantity_in_base_unit',
+    'Cost', 'ListPrice',
+    'list_price_per_kg', 'cost_per_kg',
+    'list_price_per_liter', 'cost_per_liter',
+    'list_price_per_unit', 'cost_per_unit',
+    'gross_margin', 'margin_pct',
 ]
 
 def query_database(sql_query: str):
