@@ -1,0 +1,9 @@
+#keeping API keys safe
+.env
+
+#Python cache and venv
+__pycache__/
+.venv/
+
+# Database files
+data/db/*.db
