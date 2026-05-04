@@ -1,6 +1,6 @@
 ## 🧪 Testing & Validation
 
-The system undergoes rigorous testing to ensure both analytical accuracy and data privacy.
+The following tests verify the **Analyst Agent's** ability to transform natural language into secure, accurate SQL while maintaining professional persona constraints.
 
 ### Test Case 1: Business Logic
 **Query:** *"The management team wants to know which supplier has the best selling product"*
