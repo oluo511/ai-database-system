@@ -13,7 +13,7 @@ DB_PATH = os.path.join(BASE_DIR, '..', 'data', 'db', 'nafood.db')
 SAFE_COLUMNS = [
     'ManufacturerID', 'ManufacturerName', 'City', 'State', 
     'ProductID', 'ProductName', 'CategoryName', 'AvailableQuantity', 'Unit',
-    'SupplierName', 'ClientName', 'OrderDate', 'OrderTotal'
+    'SupplierName', 'ClientName', 'OrderDate', 'OrderTotal', 'TotalSpent', 'Revenue'
 ]
 
 def query_database(sql_query: str):

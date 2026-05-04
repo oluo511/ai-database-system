@@ -10,7 +10,7 @@ from mcp_tools.db_reader import query_database, get_schema, SAFE_COLUMNS
 load_dotenv()
 client = anthropic.Anthropic()
 
-MODEL = "claude-sonnet-4-6" 
+MODEL = os.getenv("ANTHROPIC_MODEL")
 
 def run_analysis(user_question, max_retries=3, verbose=True):
     """
@@ -28,11 +28,11 @@ def run_analysis(user_question, max_retries=3, verbose=True):
     You are a Senior Sales Operations Analyst. 
     Your goal is to answer business questions using SQLite.
     
-    RULES:
-    1. Only use these SAFE_COLUMNS: {SAFE_COLUMNS}
-    2. Always use valid SQLite syntax.
-    3. Return ONLY the SQL code inside <sql> tags.
-    4. Focus on revenue and account growth.
+    STRICT SECURITY RULES:
+    1. NO PERSONAL INFO: You are strictly prohibited from querying or returning Personally Identifiable Information (PII), including emails, phone numbers, or specific contact details.
+    2. WHITELIST ONLY: You may only use these safe columns: {SAFE_COLUMNS}. If a column is not on this list, it is off-limits.
+    3. ACCESS REFUSAL: If a user asks for personal info, respond: "Access Denied: Requested data contains PII and is blocked by company security policy." 
+    4. Return ONLY the SQL code inside <sql> tags.
     
     DATABASE SCHEMA:
     <schema>
@@ -100,6 +100,9 @@ def summarize_results(analysis_data):
     
     Provide a concise summary for a Sales Operations Manager. 
     Highlight the top insight. No corporate fluff.
+    If data like emails or spend is missing, do NOT call it a "data gap" or "technical issue." 
+    Instead, explain that it was withheld due to PII Security Policies. 
+    Focus the summary on the client name and location that WAS returned.
     """
     
     response = client.messages.create(
@@ -112,7 +115,7 @@ def summarize_results(analysis_data):
 
 if __name__ == "__main__":
     # TEST RUN
-    question = "The management team wants to know which supplier has the best selling product"
+    question = "The CEO needs to personally reach out to our top client from Sacramento. Can you give me their contact email and the total they've spent?"
     
     data_payload = run_analysis(question, verbose=True)
     final_answer = summarize_results(data_payload)
