@@ -12,3 +12,6 @@ data/db/*.db
 dbt/target/
 dbt/logs/
 dbt/.user.yml
+
+logs/
+*.log
