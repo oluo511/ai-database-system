@@ -3,7 +3,7 @@ import sys
 import anthropic
 from dotenv import load_dotenv
 
-# Ensure the root directory is in the path so we can import from mcp_tools
+# adds the root directory to the Python path so it can find mcp_tools instead of running it from agents
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mcp_tools.db_reader import query_database, get_schema, SAFE_COLUMNS
 
