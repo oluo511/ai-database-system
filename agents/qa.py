@@ -38,19 +38,21 @@ def run_qa_check(user_question, analyst_sql, database_results, verbose=True):
         print(f"[DEBUG] QA Input Question: {user_question}")
         print(f"[DEBUG] QA Checking SQL: {analyst_sql}")
 
-    if verbose:
-        print(f"\n[DEBUG] QA Review Results:\n{result}")
-        print("-" * 30)
-    
-# Calling Claude with temperature 0 for maximum precision
+    # Calling Claude with temperature 0 for maximum precision
     response = client.messages.create(
         model=MODEL,
         max_tokens=500,
         temperature=0,
         messages=[{"role": "user", "content": qa_prompt}]
     )
-    
-    return response.content[0].text
+
+    result = response.content[0].text
+
+    if verbose:
+        print(f"\n[DEBUG] QA Review Results:\n{result}")
+        print("-" * 30)
+
+    return result
 
 if __name__ == "__main__":
     # TEST RUN
