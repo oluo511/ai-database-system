@@ -3,7 +3,7 @@ import sys
 from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
 from langchain.tools import tool
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_react_agent
 
 # Ensure root is on path for mcp_tools imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -75,9 +75,28 @@ tools = [schema_lookup, business_rule_lookup, database_inspector, sql_analyst]
 
 # ----------------------------------------------------------------
 # LLM
-# temperature=0 for deterministic tool selection and routing
+# temperature=0: Enables "Greedy Decoding" for deterministic output. 
+# The model picks the single most likely next token (highest probability), 
+# ensuring consistent tool selection and SQL generation.
+# 
+# top_k (Top-k Sampling): Reduces randomness by limiting the pool of potential tokens to the most likely options.
+#
+# top_p (Nucleus Sampling): Limits pool of tokens to cumulative probability mass. 
+#
+# THE FLOW:
+# 1. top_k = 5: limits pool to top 5 most likely next tokens.
+# 2. top_p = 0.9: only considers tokens that add up to 90% cumulative probability. 
+#    If the first 2 tokens exceeds 90%, the other 3 will not be considered.
+# 3. Randomly picks a token from the 2 tokens in pool
+#
+# NOTE: top_p / top_k irrelevant when temp is 0 since model stops sampling 
+# from pool of words and strictly goes with highest probability token at each step.
 # ----------------------------------------------------------------
-llm = ChatAnthropic(model=os.getenv("ANTHROPIC_MODEL"), temperature=0)
+llm = ChatAnthropic(model=os.getenv("ANTHROPIC_MODEL"), 
+                    temperature=0,
+                    max_tokens=2048,
+                    max_retries=2 # just in case API calls fail, rety 2 times
+                    )
 
 # ----------------------------------------------------------------
 # SYSTEM PROMPT
